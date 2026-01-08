@@ -1,4 +1,4 @@
-use school
+use SchoolMGT
 go 
 
 Create Procedure [dbo].[ChangePassword] 
