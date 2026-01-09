@@ -151,7 +151,7 @@ public class SubjectFrm extends JFrame{
 
     static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new MainFrm().setVisible(true);
+            new SubjectFrm().setVisible(true);
         });
     }
 }

@@ -32,24 +32,21 @@ public class LoginFrm extends JFrame{
     private void Authentication() {
         String username = txt_Username.getText();
         String password = txt_Password.getText();
-        boolean loginSuccess = false;
+        Login authenticatedUser = null; // Store the matching user object
 
         for (Login login : LoginDAO.getAll()) {
-            // IMPORTANT: Use .equals() for passwords to maintain case sensitivity
-            // Ensure LoginDAO.getAll() is calling the decrypt() method we made!
             if (login.getUsername().equalsIgnoreCase(username) && login.getPassword().equals(password)) {
-                loginSuccess = true;
-                break; // Stop looking once we find the user
+                authenticatedUser = login; // Capture the user including their Role
+                break;
             }
         }
 
-        if (loginSuccess) {
-
+        if (authenticatedUser != null) {
             this.dispose();
-            MainFrm main = new MainFrm();
+            // Pass the role to the Main Dashboard for authorization
+            MainFrm main = new MainFrm(authenticatedUser.getRole());
             main.setVisible(true);
         } else {
-            // Always provide feedback if the loop finishes without a match
             JOptionPane.showMessageDialog(this, "Invalid Username or Password", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
     }

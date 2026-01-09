@@ -1,18 +1,18 @@
 package Model;
 
 public class Login {
-    String Username, Password;
+    private String username;
+    private String password;
+    private String role; // New field for authorization
 
-    public String getUsername() {
-        return Username;
+    public Login(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
-    public String getPassword() {
-        return Password;
-    }
-
-    public Login(String username, String password) {
-        Username = username;
-        Password = password;
-    }
+    // Getters
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+    public String getRole() { return role; }
 }

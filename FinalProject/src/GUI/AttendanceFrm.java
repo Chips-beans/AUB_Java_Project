@@ -181,7 +181,7 @@ public class AttendanceFrm extends JFrame {
     }
     static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new MainFrm().setVisible(true);
+            new AttendanceFrm().setVisible(true);
         });
     }
 }

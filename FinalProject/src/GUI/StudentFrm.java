@@ -298,7 +298,7 @@ public class StudentFrm extends JFrame {
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new MainFrm().setVisible(true);
+            new StudentFrm().setVisible(true);
         });
 
     }

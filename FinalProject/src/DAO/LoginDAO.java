@@ -10,23 +10,25 @@ import java.util.List;
 public class LoginDAO {
     public static List<Login> getAll() {
         List<Login> loginList = new ArrayList<>();
-        String sql = "SELECT * FROM Users";
+        // Ensure your SQL table 'Users' has a column named 'Role'
+        String sql = "SELECT Username, Password_Hash, Role FROM Users";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                // 1. Get the encrypted string from the database
                 String encryptedFromDB = rs.getString("Password_Hash");
+                String roleFromDB = rs.getString("Role"); // Fetch role
 
-                // 2. Decrypt it back to original text
+                // Decrypt it back to original text
                 String plainPassword = decrypt(encryptedFromDB);
 
-                // 3. Store the decrypted version in your Model
+                // Add the role to the model
                 loginList.add(new Login(
                         rs.getString("Username"),
-                        plainPassword
+                        plainPassword,
+                        roleFromDB
                 ));
             }
         } catch (Exception e) {
@@ -51,6 +53,54 @@ public class LoginDAO {
             result.append((char) (c - 4));
         }
         return result.toString();
+    }
+    // 1. ADD NEW USER
+    public static boolean insert(Login user) {
+        String sql = "INSERT INTO Users (Username, Password_Hash, Role) VALUES (?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, user.getUsername());
+            // Encrypt the plain text password before saving
+            ps.setString(2, encrypt(user.getPassword()));
+            ps.setString(3, user.getRole());
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    // UPDATE EXISTING USER
+    public static boolean update(Login user) {
+        String sql = "UPDATE Users SET Password_Hash = ?, Role = ? WHERE Username = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // We re-encrypt the new password before saving
+            ps.setString(1, encrypt(user.getPassword()));
+            ps.setString(2, user.getRole());
+            ps.setString(3, user.getUsername());
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 2. DELETE USER
+    public static boolean delete(String username) {
+        String sql = "DELETE FROM Users WHERE Username = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

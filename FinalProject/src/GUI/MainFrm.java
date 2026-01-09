@@ -14,7 +14,6 @@ public class MainFrm extends JFrame {
     private JPanel centerPan;
     private JPanel rightPan;
     private JPanel footerPan;
-    private JLabel headerPan;
     private JButton teacherBtn;
     private JButton subjectBtn;
     private JButton feeButton;
@@ -22,20 +21,23 @@ public class MainFrm extends JFrame {
     private JButton classButton;
     private JButton enrollmentButton;
     private JButton attendanceButton;
+    private JButton createUserButton;
+    private JPanel topPan;
     private JDesktopPane contPan;
-
-    public MainFrm() {
-
+    private String userRole;
+    public MainFrm(String role) {
+        this.userRole = role;
+        applySecurity();
         contPan = new JDesktopPane();
 
         contPan.setLayout(new BorderLayout());
 
         //add header, footer, left and right
-        add(headerPan, BorderLayout.NORTH);
+        add(topPan, BorderLayout.NORTH);
         add(footerPan, BorderLayout.SOUTH);
-        add(leftPan, BorderLayout.WEST);
-        add(rightPan, BorderLayout.EAST);
-        add(centerPan, BorderLayout.CENTER);
+        add(leftPan,  BorderLayout.WEST);
+        add(rightPan,  BorderLayout.EAST);
+        add(centerPan,BorderLayout.CENTER);
         JInternalFrame frm = new JInternalFrame();
 
         add(contPan);
@@ -125,7 +127,21 @@ public class MainFrm extends JFrame {
                 openChildForm(frm, new AttendanceFrm().Attendance_Pan);
             }
         });
+        createUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openChildForm(frm, new CreateUser().CreateUser_Pan);
+            }
+        });
 
+
+    }
+    private void applySecurity() {
+        if ("Staff".equalsIgnoreCase(userRole)) {
+            // Disable buttons for teachers
+            createUserButton.setEnabled(false);
+            changePasswordBtn.setEnabled(false);
+        }
     }
     private void openChildForm(JInternalFrame frm, JPanel mainPan) {
         // 1. Clear previous content
@@ -158,9 +174,12 @@ public class MainFrm extends JFrame {
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new MainFrm().setVisible(true);
+            new MainFrm("Admin").setVisible(true);
         });
 
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
 }

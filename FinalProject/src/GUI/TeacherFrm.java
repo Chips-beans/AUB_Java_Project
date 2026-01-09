@@ -30,6 +30,7 @@ public class TeacherFrm extends JFrame {
         this.setContentPane(Teacher_Pan);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.pack();
+        loadTableData("");
 
         try {
             // 1. Correct Mask for Date (YYYY-MM-DD)
@@ -239,7 +240,7 @@ public class TeacherFrm extends JFrame {
 
     static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new MainFrm().setVisible(true);
+            new TeacherFrm().setVisible(true);
         });
     }
 }
